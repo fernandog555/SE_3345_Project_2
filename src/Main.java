@@ -5,13 +5,17 @@ public class Main
 {
     public static void main(String[] args) throws IOException
     {
+        // Create all the objects that we are gonna need
         Scanner scanUser = new Scanner(System.in);
+        LazyBinarySearchTree tree = new LazyBinarySearchTree();
         
-        System.out.print("Enter commands file name: ");
-        String INPUTFILE = scanUser.nextLine();
+        //System.out.print("Enter commands file name: ");
+        //String INPUTFILE = scanUser.nextLine();
+
+        String INPUTFILE = "test.txt";
         
         try (Scanner scanFile = new Scanner(new File(INPUTFILE)))
-        {
+        { 
             while (scanFile.hasNextLine())
             {
                 String textLine = scanFile.nextLine().trim().toLowerCase();
@@ -20,11 +24,11 @@ public class Main
                 if (textLine.startsWith("insert:") || textLine.startsWith("delete:") || textLine.startsWith("contains:"))
                 {
                     int number = extractNumber(textLine);
-                    System.out.println("value: " + number);
         
                     if (textLine.startsWith("insert:"))
                     {
-                        // handle insert
+                        tree.insert(number);
+                        //System.out.println("Value " + number + " has been inserted.");
                     }
                     else if (textLine.startsWith("delete:"))
                     {

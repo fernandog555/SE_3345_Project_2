@@ -5,7 +5,7 @@ public class TreeNode
      TreeNode rightChild;
      boolean deleted;
 
-     TreeNode()
+     TreeNode(int key)
      {
          this.key = key;
          this.leftChild = null;
