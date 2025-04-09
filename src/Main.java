@@ -36,7 +36,14 @@ public class Main
                     }
                     else if (textLine.startsWith("contains:"))
                     {
-                        // handle contains
+                        if (tree.contains(number) == true)
+                        {
+                            System.out.println(number + " is in the tree");
+                        }
+                        else
+                        {
+                            System.out.println(number + " is NOT in the tree");
+                        }
                     }
                 }
                 else if (textLine.equals("printtree"))
@@ -45,15 +52,11 @@ public class Main
                 }
                 else if (textLine.equals("findmin"))
                 {
-                    // handle findMin
+                    System.out.println("The minimum value is: " + tree.findMin());
                 }
                 else if (textLine.equals("findmax"))
                 {
-                    // handle findMax
-                }
-                else if (textLine.equals("contains"))
-                {
-                    // handle contains with no argument?
+                    System.out.println("The maximum value is: " + tree.findMax());
                 }
                 else if (textLine.equals("height"))
                 {

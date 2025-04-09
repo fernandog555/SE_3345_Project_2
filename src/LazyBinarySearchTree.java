@@ -26,6 +26,7 @@ public class LazyBinarySearchTree
         if (key > 99 || key < 1)
         {
             System.out.println("Key " + key + " is out of range! Must be between 1 and 99.");
+            System.out.println("Element will be skipped.");
             return false;
         }
 
@@ -39,9 +40,10 @@ public class LazyBinarySearchTree
 
         // Need to make existingElement method to check if we already have an existing element similar to the one we wanna add.
         // Traversal through the tree to find.
-        if (existingElement(key) == true)
+        if (contains(key) == true)
         {
             System.out.println("Key " + key + " is already exists! Element will be skipped.");
+            return false;
         }
         else
         {
@@ -87,12 +89,6 @@ public class LazyBinarySearchTree
         return false;
     }
 
-    public boolean existingElement(int key)
-    {
-        // TODO: Create traversal algorithm to search through the tree to find the key.
-        return false;
-    }
-
     public boolean delete(int key)
     {
         return false;
@@ -100,16 +96,66 @@ public class LazyBinarySearchTree
 
     public int findMin()
     {
-        return 0;
+        // First, check if there is a root
+        if (root == null)
+        {
+            System.out.println("Warning: Tree is empty!");
+            return -1;
+        }
+
+        TreeNode current = root;
+        TreeNode minNode = null;
+
+        while (current != null)
+        {
+            minNode = current;
+            current = current.leftChild;
+        }
+        // Found minimum
+        return minNode.key;
     }
 
     public int findMax()
     {
-        return 0;
+        // First, check if there is a root
+        if (root == null)
+        {
+            System.out.println("Warning: Tree is empty!");
+            return -1;
+        }
+
+        TreeNode current = root;
+        TreeNode minNode = null;
+
+        while (current != null)
+        {
+            minNode = current;
+            current = current.rightChild;
+        }
+        // Found minimum
+        return minNode.key;
     }
 
     public boolean contains(int key)
     {
+        TreeNode current = root;
+        while (current != null)
+        {
+            if (key < current.key)
+            {
+                current = current.leftChild;
+            }
+            else if (key > current.key)
+            {
+                current = current.rightChild;
+            }
+            else
+            {
+                // Found node
+                return true;
+            }
+        }
+        // Did not find node
         return false;
     }
 
