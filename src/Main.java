@@ -5,84 +5,114 @@ public class Main
 {
     public static void main(String[] args)
     {
-        // Create all the objects that we are gonna need
-        Scanner scanUser = new Scanner(System.in);
         LazyBinarySearchTree tree = new LazyBinarySearchTree();
 
-        //System.out.print("Enter commands file name: ");
-        //String INPUTFILE = scanUser.nextLine();
+        if (args.length != 2)
+        {
+            System.out.println("Usage: java Main <input_file> <output_file>");
+            return;
+        }
 
-        String INPUTFILE = "input.txt";
+        String inputFile = args[0];
+        String outputFile = args[1];
 
-        try (Scanner scanFile = new Scanner(new File(INPUTFILE)))
+        try (Scanner scanFile = new Scanner(new File(inputFile));
+             PrintWriter writer = new PrintWriter(new FileWriter(outputFile)))
         {
             while (scanFile.hasNextLine())
             {
-                String textLine = scanFile.nextLine().trim().toLowerCase();
-                System.out.println("\n" + textLine);
-                processCommandsFile(textLine, tree);
+                String textLine = scanFile.nextLine().trim();
+                processCommandsFile(textLine, tree, writer);
             }
         }
         catch (FileNotFoundException e)
         {
-            System.out.println("Command file not found: " + INPUTFILE);
+            System.out.println("Command file not found: " + inputFile);
+        }
+        catch (IOException e)
+        {
+            System.out.println("Error writing to output file: " + outputFile);
         }
     }
 
-    private static void processCommandsFile(String textLine, LazyBinarySearchTree tree)
+    private static void processCommandsFile(String textLine, LazyBinarySearchTree tree, PrintWriter writer)
     {
-        if (textLine.startsWith("insert:"))
+        try
         {
-            int number = extractNumber(textLine);
-            tree.insert(number);
-            //System.out.println("Value " + number + " has been inserted.");
-        }
-        else if (textLine.startsWith("delete:"))
-        {
-            int number = extractNumber(textLine);
-            tree.delete(number);
-        }
-        else if (textLine.startsWith("contains:"))
-        {
-            int number = extractNumber(textLine);
-            if (tree.contains(number) == true)
+            if (textLine.startsWith("Insert:"))
             {
-                System.out.println(number + " is in the tree");
+                int number = extractNumber(textLine);
+                writer.println(tree.insert(number));
+            }
+            else if (textLine.startsWith("Delete:"))
+            {
+                int number = extractNumber(textLine);
+                writer.println(tree.delete(number));
+            }
+            else if (textLine.startsWith("Contains:"))
+            {
+                int number = extractNumber(textLine);
+                writer.println(tree.contains(number));
+            }
+            else if (textLine.equals("PrintTree"))
+            {
+                writer.println(tree.toString());
+            }
+            else if (textLine.equals("FindMin"))
+            {
+                writer.println(tree.findMin());
+            }
+            else if (textLine.equals("FindMax"))
+            {
+                writer.println(tree.findMax());
+            }
+            else if (textLine.equals("Height"))
+            {
+                writer.println(tree.height());
+            }
+            else if (textLine.equals("Size"))
+            {
+                writer.println(tree.size());
             }
             else
             {
-                System.out.println(number + " is NOT in the tree");
+                writer.println("Error in Line: " + textLine);
             }
         }
-        else if (textLine.equals("printtree"))
+        catch (IllegalArgumentException e)
         {
-            System.out.println(tree.toString());
+            if (textLine.startsWith("Insert:"))
+            {
+                writer.println("Error in insert: IllegalArgumentException raised");
+            }
+            else if (textLine.startsWith("Delete:"))
+            {
+                writer.println("Error in delete: IllegalArgumentException raised");
+            }
+            else if (textLine.startsWith("Contains:"))
+            {
+                writer.println("Error in contains: IllegalArgumentException raised");
+            }
+            else
+            {
+                writer.println("Error in Line: " + textLine);
+            }
         }
-        else if (textLine.equals("findmin"))
+        catch (Exception e)
         {
-            System.out.println("The minimum value is: " + tree.findMin());
-        }
-        else if (textLine.equals("findmax"))
-        {
-            System.out.println("The maximum value is: " + tree.findMax());
-        }
-        else if (textLine.equals("height"))
-        {
-            tree.height();
-            System.out.println("Tree height: " + tree.height());
-        }
-        else if (textLine.equals("size"))
-        {
-            System.out.println("Tree size: " + tree.size());
-        }
-        else
-        {
-            System.out.println("Error in Line: " + textLine);
+            writer.println("Error in Line: " + textLine);
         }
     }
 
     private static int extractNumber(String line)
     {
-        return Integer.parseInt(line.split(":")[1].trim());
+        try
+        {
+            return Integer.parseInt(line.split(":")[1].trim());
+        }
+        catch (Exception e)
+        {
+            throw new IllegalArgumentException();
+        }
     }
 }

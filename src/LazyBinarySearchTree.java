@@ -1,12 +1,23 @@
 public class LazyBinarySearchTree
 {
+    private class TreeNode
+    {
+        int key;
+        TreeNode leftChild;
+        TreeNode rightChild;
+        boolean deleted;
+
+        TreeNode(int key)
+        {
+            this.key = key;
+            this.leftChild = null;
+            this.rightChild = null;
+            this.deleted = false; // default deleted as false. this only changes when we delete
+        }
+    }
+
     // Start by creating the root node of the binary tree
     TreeNode root;
-
-    public LazyBinarySearchTree()
-    {
-        System.out.println("Binary Search Tree has been created.");
-    }
 
     /*
      * Insert will add a new element to a leaf node.
@@ -24,32 +35,22 @@ public class LazyBinarySearchTree
         TreeNode newNode = new TreeNode(key);
 
         // First and foremost, we check if the value is actually within accepted range [1-99].
-        if (key > 99 || key < 1)
-        {
-            System.out.println("Key " + key + " is out of range! Must be between 1 and 99.");
-            System.out.println("Element will be skipped.");
-            return false;
-            // TODO: We may need to add some mode checks and testing for this edge case
-        }
+        validateKey(key);
 
         // Afterwards, we check if root is null. If so, our insertion will be root.
         if (root == null)
         {
             root = new TreeNode(key);
-            System.out.println("Insertion of node was root.");
             return true;
         }
 
         // Check if there exists a duplicate.
         if (contains(key) == true)
         {
-            System.out.println("Found existing duplicate key. Checking if its marked as deleted.");
-
             // Assuming we found an existing duplicate, we need to check if its deleted.
             TreeNode checkNode = search(key);
             if (checkNode.deleted == true)
             {
-                System.out.println("Node was marked as deleted. It is now undeleted.");
                 // Mark the node as undeleted, and exit out.
                 checkNode.deleted = false;
                 return false;
@@ -57,7 +58,6 @@ public class LazyBinarySearchTree
             else
             {
                 // If we did find a node that was a duplicate, but was not marked as deleted, do nothing.
-                System.out.println("Node was NOT marked as deleted. Element has been skipped.");
                 return false;
             }
         }
@@ -79,12 +79,10 @@ public class LazyBinarySearchTree
                 // Once we compare, we keep repeating until its time to actually insert.
                 if (key < current.key)
                 {
-                    System.out.println("Going left from " + current.key);
                     current = current.leftChild;
                 }
                 else
                 {
-                    System.out.println("Going right from " + current.key);
                     current = current.rightChild;
                 }
             }
@@ -93,13 +91,11 @@ public class LazyBinarySearchTree
             if (key < parent.key)
             {
                 parent.leftChild = newNode;
-                System.out.println("Insertion is left child of " + key + ".");
                 return true;
             }
             else
             {
                 parent.rightChild = newNode;
-                System.out.println("Insertion is right child of " + key + ".");
                 return true;
             }
         }
@@ -132,10 +128,12 @@ public class LazyBinarySearchTree
     // TODO: It would be nice to reorganize some of the logic so its more readable. Also to implement an ability to say if we are trying to delete a null pointer, or the node was already marked as deleted.
     public boolean delete(int key)
     {
+        // Always check if key is within valid range.
+        validateKey(key);
+
         // First we check if the node we want to delete is null
         if (root == null)
         {
-            System.out.println("Warning: Root node is null! There is nothing to delete!");
             return false;
         }
 
@@ -143,18 +141,15 @@ public class LazyBinarySearchTree
         TreeNode nodeToDelete = search(key);
         if (nodeToDelete == null || nodeToDelete.deleted == true)  // do nothing if its already deleted or is null
         {
-            System.out.println("Element " + key + " was not deleted either because it was already deleted, or is null.");
             return false;
         }
         else if (contains(key) == false) // Check if it even exists
         {
             // if not, then say we cant
-            System.out.println("Warning: Element " + key + " was not deleted. Element does not exist.");
             return false;
         }
         else  // node does exist.
         {
-            System.out.println("Element " + key + " was deleted.");
             nodeToDelete.deleted = true;
             return true;
         }
@@ -164,7 +159,6 @@ public class LazyBinarySearchTree
     {
         if (root == null)
         {
-            System.out.println("Warning: Tree is empty!");
             return -1;
         }
 
@@ -182,7 +176,6 @@ public class LazyBinarySearchTree
 
         if (minNode == null)
         {
-            System.out.println("Warning: No undeleted minimum found.");
             return -1;
         }
 
@@ -193,7 +186,6 @@ public class LazyBinarySearchTree
     {
         if (root == null)
         {
-            System.out.println("Warning: Tree is empty!");
             return -1;
         }
 
@@ -211,7 +203,6 @@ public class LazyBinarySearchTree
 
         if (maxNode == null)
         {
-            System.out.println("Warning: No undeleted maximum found.");
             return -1;
         }
 
@@ -221,8 +212,10 @@ public class LazyBinarySearchTree
 
     public boolean contains(int key)
     {
-        TreeNode current = root;
+        // Always check if key is within valid range.
+        validateKey(key);
 
+        TreeNode current = root;
         while (current != null)
         {
             if (key < current.key)
@@ -303,6 +296,17 @@ public class LazyBinarySearchTree
         }
 
         return 1 + sizeHelper(node.leftChild) + sizeHelper(node.rightChild);
+    }
+
+    private void validateKey(int key)
+    {
+        final int MIN_KEY = 1;
+        final int MAX_KEY = 99;
+
+        if (key < MIN_KEY || key > MAX_KEY)
+        {
+            throw new IllegalArgumentException("Invalid key: " + key);
+        }
     }
 
 }
