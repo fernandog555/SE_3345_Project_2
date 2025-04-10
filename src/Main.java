@@ -12,7 +12,7 @@ public class Main
         //System.out.print("Enter commands file name: ");
         //String INPUTFILE = scanUser.nextLine();
 
-        String INPUTFILE = "test.txt";
+        String INPUTFILE = "input.txt";
 
         try (Scanner scanFile = new Scanner(new File(INPUTFILE)))
         {
@@ -56,33 +56,28 @@ public class Main
         }
         else if (textLine.equals("printtree"))
         {
-            // handle printTree
-            // (Potentially only a few lines, so it's inlined here)
-            // e.g., System.out.println(tree.toString());
+            System.out.println(tree.toString());
         }
         else if (textLine.equals("findmin"))
         {
-            // handle findMin
             System.out.println("The minimum value is: " + tree.findMin());
         }
         else if (textLine.equals("findmax"))
         {
-            // handle findMax
             System.out.println("The maximum value is: " + tree.findMax());
         }
         else if (textLine.equals("height"))
         {
-            // handle height
-            // e.g., System.out.println("Tree height: " + tree.height());
+            tree.height();
+            System.out.println("Tree height: " + tree.height());
         }
         else if (textLine.equals("size"))
         {
-            // handle size
-            // e.g., System.out.println("Tree size: " + tree.size());
+            System.out.println("Tree size: " + tree.size());
         }
         else
         {
-            System.out.println("Unknown command");
+            System.out.println("Error in Line: " + textLine);
         }
     }
 

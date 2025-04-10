@@ -162,7 +162,6 @@ public class LazyBinarySearchTree
 
     public int findMin()
     {
-        // First, check if there is a root
         if (root == null)
         {
             System.out.println("Warning: Tree is empty!");
@@ -174,16 +173,24 @@ public class LazyBinarySearchTree
 
         while (current != null)
         {
-            minNode = current;
+            if (!current.deleted)
+            {
+                minNode = current; // update min if it's not deleted
+            }
             current = current.leftChild;
         }
-        // Found minimum
+
+        if (minNode == null)
+        {
+            System.out.println("Warning: No undeleted minimum found.");
+            return -1;
+        }
+
         return minNode.key;
     }
 
     public int findMax()
     {
-        // First, check if there is a root
         if (root == null)
         {
             System.out.println("Warning: Tree is empty!");
@@ -191,20 +198,31 @@ public class LazyBinarySearchTree
         }
 
         TreeNode current = root;
-        TreeNode minNode = null;
+        TreeNode maxNode = null;
 
         while (current != null)
         {
-            minNode = current;
+            if (!current.deleted)
+            {
+                maxNode = current;
+            }
             current = current.rightChild;
         }
-        // Found minimum
-        return minNode.key;
+
+        if (maxNode == null)
+        {
+            System.out.println("Warning: No undeleted maximum found.");
+            return -1;
+        }
+
+        return maxNode.key;
     }
+
 
     public boolean contains(int key)
     {
         TreeNode current = root;
+
         while (current != null)
         {
             if (key < current.key)
@@ -217,27 +235,74 @@ public class LazyBinarySearchTree
             }
             else
             {
-                // Found node
-                return true;
+                // Found the node — check if it's not deleted
+                return !current.deleted;
             }
         }
-        // Did not find node
+
+        // Key not found in the tree
         return false;
     }
 
     @Override
     public String toString()
     {
-        return "";
+        StringBuilder sb = new StringBuilder();
+        preOrderPrint(root, sb);
+        return sb.toString().trim(); // trim to remove leading/trailing space
     }
+
+    private void preOrderPrint(TreeNode node, StringBuilder sb)
+    {
+        if (node == null)
+        {
+            return;
+        }
+
+        if (node.deleted)
+        {
+            sb.append("*");
+        }
+
+        sb.append(node.key).append(" ");
+
+        preOrderPrint(node.leftChild, sb);
+        preOrderPrint(node.rightChild, sb);
+    }
+
 
     public int height()
     {
-        return 0;
+        return heightHelper(root);
     }
+
+    private int heightHelper(TreeNode node)
+    {
+        if (node == null)
+        {
+            return -1; // base case: empty tree has height -1
+        }
+
+        int leftHeight = heightHelper(node.leftChild);
+        int rightHeight = heightHelper(node.rightChild);
+
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+
 
     public int size()
     {
-        return 0;
+        return sizeHelper(root);
     }
+
+    private int sizeHelper(TreeNode node)
+    {
+        if (node == null)
+        {
+            return 0;
+        }
+
+        return 1 + sizeHelper(node.leftChild) + sizeHelper(node.rightChild);
+    }
+
 }
