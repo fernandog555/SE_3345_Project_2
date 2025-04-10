@@ -10,6 +10,6 @@ public class TreeNode
          this.key = key;
          this.leftChild = null;
          this.rightChild = null;
-         this.deleted = false;
+         this.deleted = false; // default deleted as false. this only changes when we delete
      }
 }
