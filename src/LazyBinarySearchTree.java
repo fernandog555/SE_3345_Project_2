@@ -1,5 +1,13 @@
+/**
+ * A Lazy Binary Search Tree implementation that supports logical deletion.
+ * Keys must be in the range [1, 99].
+ * Deleted nodes are marked but not physically removed.
+ */
 public class LazyBinarySearchTree
 {
+    /**
+     * Inner class representing a single node in the binary search tree.
+     */
     private class TreeNode
     {
         int key;
@@ -7,6 +15,10 @@ public class LazyBinarySearchTree
         TreeNode rightChild;
         boolean deleted;
 
+        /**
+         * Constructs a new TreeNode with the given key.
+         * @param key the key value of the node
+         */
         TreeNode(int key)
         {
             this.key = key;
@@ -19,16 +31,12 @@ public class LazyBinarySearchTree
     // Start by creating the root node of the binary tree
     TreeNode root;
 
-    /*
-     * Insert will add a new element to a leaf node.
-     * Valid set of keys will be in the range 1-99.
-     * If the new element we want to add already exists, do nothing (do not add the node).
-     * However, if the new element isn't a duplicate of a not-deleted element, but is a
-     * duplicate of a deleted element, then this method must mark the "deleted" element
-     * as undeleted.
+    /**
+     * Inserts a new element into the tree or undeletes an existing logically deleted node.
      *
-     * The boolean that gets returned must indicate whether the method has physically
-     * inserted a new node (true), or if we "undeleted" (false) an element.
+     * @param key the value to insert (must be in range 1–99)
+     * @return true if a new node was physically inserted, false if a deleted node was undeleted or key already existed
+     * @throws IllegalArgumentException if key is outside valid range
      */
     public boolean insert(int key)
     {
@@ -101,7 +109,12 @@ public class LazyBinarySearchTree
         }
     }
 
-    // Helper method that searches for a node and returns it. Unlike contains(), it will not give back a boolean.
+    /**
+     * Searches for a node with the given key.
+     *
+     * @param key the key to search for
+     * @return the TreeNode with the given key, or null if not found
+     */
     public TreeNode search(int key)
     {
         TreeNode current = root;
@@ -126,6 +139,14 @@ public class LazyBinarySearchTree
     // false = node was not deleted
     // true = node was deleted
     // TODO: It would be nice to reorganize some of the logic so its more readable. Also to implement an ability to say if we are trying to delete a null pointer, or the node was already marked as deleted.
+
+    /**
+     * Marks a node with the given key as logically deleted.
+     *
+     * @param key the value to delete (must be in range 1–99)
+     * @return true if the node was successfully marked as deleted, false otherwise
+     * @throws IllegalArgumentException if key is outside valid range
+     */
     public boolean delete(int key)
     {
         // Always check if key is within valid range.
@@ -155,6 +176,11 @@ public class LazyBinarySearchTree
         }
     }
 
+    /**
+     * Finds the minimum key that is not marked as deleted.
+     *
+     * @return the minimum undeleted key, or -1 if none exists
+     */
     public int findMin()
     {
         if (root == null)
@@ -182,6 +208,11 @@ public class LazyBinarySearchTree
         return minNode.key;
     }
 
+    /**
+     * Finds the maximum key that is not marked as deleted.
+     *
+     * @return the maximum undeleted key, or -1 if none exists
+     */
     public int findMax()
     {
         if (root == null)
@@ -209,7 +240,13 @@ public class LazyBinarySearchTree
         return maxNode.key;
     }
 
-
+    /**
+     * Checks whether the tree contains the given key and it is not marked as deleted.
+     *
+     * @param key the key to search for (must be in range 1–99)
+     * @return true if the key exists and is not deleted, false otherwise
+     * @throws IllegalArgumentException if key is outside valid range
+     */
     public boolean contains(int key)
     {
         // Always check if key is within valid range.
@@ -237,6 +274,11 @@ public class LazyBinarySearchTree
         return false;
     }
 
+    /**
+     * Returns a pre-order traversal of the tree including deleted nodes (marked with *).
+     *
+     * @return a string representing the pre-order traversal of the tree
+     */
     @Override
     public String toString()
     {
@@ -263,7 +305,11 @@ public class LazyBinarySearchTree
         preOrderPrint(node.rightChild, sb);
     }
 
-
+    /**
+     * Returns the height of the tree (including deleted nodes).
+     *
+     * @return the height of the tree, or -1 if the tree is empty
+     */
     public int height()
     {
         return heightHelper(root);
@@ -282,7 +328,11 @@ public class LazyBinarySearchTree
         return Math.max(leftHeight, rightHeight) + 1;
     }
 
-
+    /**
+     * Returns the number of nodes in the tree (including deleted nodes).
+     *
+     * @return the size of the tree
+     */
     public int size()
     {
         return sizeHelper(root);
@@ -298,6 +348,12 @@ public class LazyBinarySearchTree
         return 1 + sizeHelper(node.leftChild) + sizeHelper(node.rightChild);
     }
 
+    /**
+     * Validates that a key is within the allowed range [1, 99].
+     *
+     * @param key the key to validate
+     * @throws IllegalArgumentException if key is outside the valid range
+     */
     private void validateKey(int key)
     {
         final int MIN_KEY = 1;

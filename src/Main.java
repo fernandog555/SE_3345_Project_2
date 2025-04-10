@@ -1,8 +1,19 @@
+/**
+ * Main driver class for LazyBinarySearchTree.
+ * This program reads tree operations from an input file and writes the results to an output file.
+ * Commands include insert, delete, contains, findMin, findMax, printTree, height, and size.
+ * Invalid commands and out-of-range keys are gracefully handled.
+ */
 import java.util.*;
 import java.io.*;
 
 public class Main
 {
+    /**
+     * Entry point of the program. Takes two command-line arguments: input file and output file.
+     *
+     * @param args command-line arguments specifying input and output file names
+     */
     public static void main(String[] args)
     {
         LazyBinarySearchTree tree = new LazyBinarySearchTree();
@@ -35,6 +46,13 @@ public class Main
         }
     }
 
+    /**
+     * Processes a single command line from the input file and performs the corresponding tree operation.
+     *
+     * @param textLine a line from the input file representing a command
+     * @param tree the LazyBinarySearchTree on which to perform operations
+     * @param writer the PrintWriter for writing output
+     */
     private static void processCommandsFile(String textLine, LazyBinarySearchTree tree, PrintWriter writer)
     {
         try
@@ -104,6 +122,14 @@ public class Main
         }
     }
 
+    /**
+     * Extracts an integer value from a command line string.
+     * Expected format: Command:<number>
+     *
+     * @param line the command line containing a number
+     * @return the extracted number
+     * @throws IllegalArgumentException if the number format is invalid
+     */
     private static int extractNumber(String line)
     {
         try
