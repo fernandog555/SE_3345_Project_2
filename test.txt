@@ -1,8 +1,0 @@
-delete:53
-insert:50
-INSERT:75
-DELETE:75
-insert:76
-delete:50
-insert:24
-insert:50
